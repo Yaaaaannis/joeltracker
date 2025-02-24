@@ -173,7 +173,7 @@ function App() {
             {monthlyStreamTime && (
               <div className="mt-6 p-4 bg-gray-700 rounded-lg">
                 <h3 className="text-xl font-bold text-purple-400 mb-2">
-                  Temps de stream ce mois-ci
+                  Temps de stream les 30 derniers jours
                 </h3>
                 <div className="text-2xl text-white">
                   {monthlyStreamTime}

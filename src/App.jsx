@@ -6,9 +6,10 @@ import './App.css'
 function App() {
   const [lastStream, setLastStream] = useState(null)
   const [timeElapsed, setTimeElapsed] = useState('')
+  const [streamerName, setStreamerName] = useState('bmsjoel')
   const [error, setError] = useState(null)
   const [streamerAvatar, setStreamerAvatar] = useState(null)
-  const streamerName = 'bmsjoel'
+  const [monthlyStreamTime, setMonthlyStreamTime] = useState(null)
 
   const getAccessToken = async () => {
     try {
@@ -62,8 +63,13 @@ function App() {
 
       const userId = userData.data[0].id
 
-      // Ensuite, obtenir les vidéos archivées
-      const videosResponse = await fetch(`https://api.twitch.tv/helix/videos?user_id=${userId}&type=archive&first=1`, {
+      // Calculer la période des 30 derniers jours
+      const endDate = new Date()
+      const startDate = new Date()
+      startDate.setDate(startDate.getDate() - 30)
+      
+      const videosResponse = await fetch(
+        `https://api.twitch.tv/helix/videos?user_id=${userId}&type=archive&first=100&started_at=${startDate.toISOString()}&ended_at=${endDate.toISOString()}`, {
         headers: {
           'Client-ID': TWITCH_CLIENT_ID,
           'Authorization': `Bearer ${accessToken}`
@@ -75,7 +81,21 @@ function App() {
       }
 
       const videosData = await videosResponse.json()
-      console.log('Données vidéos:', videosData)
+      
+      // Calculer le temps total de stream du mois
+      let totalMinutes = 0
+      if (videosData.data) {
+        totalMinutes = videosData.data.reduce((acc, video) => {
+          const duration = video.duration || '0h0m0s'
+          const hours = parseInt(duration.match(/(\d+)h/)?.[1] || 0)
+          const minutes = parseInt(duration.match(/(\d+)m/)?.[1] || 0)
+          const seconds = parseInt(duration.match(/(\d+)s/)?.[1] || 0)
+          return acc + (hours * 60) + minutes + (seconds / 60)
+        }, 0)
+        const hours = Math.floor(totalMinutes / 60)
+        const minutes = Math.floor(totalMinutes % 60)
+        setMonthlyStreamTime(`${hours}h ${minutes}m`)
+      }
 
       if (videosData.data && videosData.data.length > 0) {
         setLastStream(new Date(videosData.data[0].created_at))
@@ -87,6 +107,7 @@ function App() {
       console.error('Erreur complète:', err)
       setError(err.message)
       setStreamerAvatar(null)
+      setMonthlyStreamTime(null)
     }
   }
 
@@ -106,7 +127,7 @@ function App() {
 
   useEffect(() => {
     fetchLastStream()
-  }, [])
+  }, [streamerName])
 
   useEffect(() => {
     if (lastStream) {
@@ -118,6 +139,8 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center">
       <div className="bg-gray-800 p-8 rounded-lg shadow-xl text-center">
+       
+        
         {error ? (
           <p className="text-red-500">{error}</p>
         ) : (
@@ -141,6 +164,16 @@ function App() {
               <p className="text-gray-400 mt-4">
                 Dernier stream : {lastStream.toLocaleDateString()} à {lastStream.toLocaleTimeString()}
               </p>
+            )}
+            {monthlyStreamTime && (
+              <div className="mt-6 p-4 bg-gray-700 rounded-lg">
+                <h3 className="text-xl font-bold text-purple-400 mb-2">
+                  Temps de stream ce mois-ci
+                </h3>
+                <div className="text-2xl text-white">
+                  {monthlyStreamTime}
+                </div>
+              </div>
             )}
           </>
         )}

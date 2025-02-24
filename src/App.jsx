@@ -86,11 +86,16 @@ function App() {
       let totalMinutes = 0
       if (videosData.data) {
         totalMinutes = videosData.data.reduce((acc, video) => {
-          const duration = video.duration || '0h0m0s'
-          const hours = parseInt(duration.match(/(\d+)h/)?.[1] || 0)
-          const minutes = parseInt(duration.match(/(\d+)m/)?.[1] || 0)
-          const seconds = parseInt(duration.match(/(\d+)s/)?.[1] || 0)
-          return acc + (hours * 60) + minutes + (seconds / 60)
+          const videoDate = new Date(video.created_at)
+          // Ne compter que les vidéos des 30 derniers jours
+          if (videoDate >= startDate && videoDate <= endDate) {
+            const duration = video.duration || '0h0m0s'
+            const hours = parseInt(duration.match(/(\d+)h/)?.[1] || 0)
+            const minutes = parseInt(duration.match(/(\d+)m/)?.[1] || 0)
+            const seconds = parseInt(duration.match(/(\d+)s/)?.[1] || 0)
+            return acc + (hours * 60) + minutes + (seconds / 60)
+          }
+          return acc
         }, 0)
         const hours = Math.floor(totalMinutes / 60)
         const minutes = Math.floor(totalMinutes % 60)

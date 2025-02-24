@@ -6,9 +6,9 @@ import './App.css'
 function App() {
   const [lastStream, setLastStream] = useState(null)
   const [timeElapsed, setTimeElapsed] = useState('')
-  const [streamerName, setStreamerName] = useState('bmsjoel')
   const [error, setError] = useState(null)
   const [streamerAvatar, setStreamerAvatar] = useState(null)
+  const streamerName = 'bmsjoel'
 
   const getAccessToken = async () => {
     try {
@@ -106,7 +106,7 @@ function App() {
 
   useEffect(() => {
     fetchLastStream()
-  }, [streamerName])
+  }, [])
 
   useEffect(() => {
     if (lastStream) {
@@ -118,14 +118,6 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center">
       <div className="bg-gray-800 p-8 rounded-lg shadow-xl text-center">
-        <input
-          type="text"
-          value={streamerName}
-          onChange={(e) => setStreamerName(e.target.value)}
-          className="mb-4 px-4 py-2 rounded bg-gray-700 text-white"
-          placeholder="Nom du streamer"
-        />
-        
         {error ? (
           <p className="text-red-500">{error}</p>
         ) : (

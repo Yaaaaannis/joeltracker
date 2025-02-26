@@ -6,10 +6,13 @@ import './App.css'
 function App() {
   const [lastStream, setLastStream] = useState(null)
   const [timeElapsed, setTimeElapsed] = useState('')
-  const [streamerName, setStreamerName] = useState('bmsjoel')
+  const [streamerName] = useState('bmsjoel')
   const [error, setError] = useState(null)
   const [streamerAvatar, setStreamerAvatar] = useState(null)
   const [monthlyStreamTime, setMonthlyStreamTime] = useState(null)
+  const [isLive, setIsLive] = useState(false)
+  const [streamUrl, setStreamUrl] = useState('')
+  const [streamThumbnail, setStreamThumbnail] = useState('')
 
   const getAccessToken = async () => {
     try {
@@ -62,6 +65,37 @@ function App() {
       setStreamerAvatar(userData.data[0].profile_image_url)
 
       const userId = userData.data[0].id
+      
+      // Vérifier si le streamer est en direct
+      const streamResponse = await fetch(`https://api.twitch.tv/helix/streams?user_id=${userId}`, {
+        headers: {
+          'Client-ID': TWITCH_CLIENT_ID,
+          'Authorization': `Bearer ${accessToken}`
+        }
+      })
+      
+      if (!streamResponse.ok) {
+        throw new Error('Impossible de vérifier si le streamer est en direct')
+      }
+      
+      const streamData = await streamResponse.json()
+      
+      // Vérifier si le streamer est en direct
+      if (streamData.data && streamData.data.length > 0) {
+        setIsLive(true)
+        setStreamUrl(`https://twitch.tv/${streamerName}`)
+        
+        // Récupérer et formater l'URL de la miniature
+        // L'URL de la miniature contient des placeholders {width} et {height} que nous remplaçons par des valeurs réelles
+        const thumbnailUrl = streamData.data[0].thumbnail_url
+          .replace('{width}', '640')
+          .replace('{height}', '360');
+        setStreamThumbnail(thumbnailUrl)
+      } else {
+        setIsLive(false)
+        setStreamUrl('')
+        setStreamThumbnail('')
+      }
 
       // Calculer la période des 30 derniers jours
       const endDate = new Date()
@@ -132,7 +166,7 @@ function App() {
 
   useEffect(() => {
     fetchLastStream()
-  }, [streamerName])
+  }, [])
 
   useEffect(() => {
     if (lastStream) {
@@ -144,8 +178,6 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center">
       <div className="bg-gray-800 p-8 rounded-lg shadow-xl text-center">
-       
-        
         {error ? (
           <p className="text-red-500">{error}</p>
         ) : (
@@ -159,26 +191,56 @@ function App() {
                 />
               </div>
             )}
-            <h2 className="text-2xl font-bold text-purple-500 mb-4">
-              Temps écoulé depuis le dernier stream de {streamerName}
-            </h2>
-            <div className="text-4xl font-mono text-white">
-              {timeElapsed || 'Chargement...'}
-            </div>
-            {lastStream && (
-              <p className="text-gray-400 mt-4">
-                Dernier stream : {lastStream.toLocaleDateString()} à {lastStream.toLocaleTimeString()}
-              </p>
-            )}
-            {monthlyStreamTime && (
-              <div className="mt-6 p-4 bg-gray-700 rounded-lg">
-                <h3 className="text-xl font-bold text-purple-400 mb-2">
-                  Temps de stream les 30 derniers jours
-                </h3>
-                <div className="text-2xl text-white">
-                  {monthlyStreamTime}
+            
+            {isLive ? (
+              <>
+                <h2 className="text-2xl font-bold text-green-500 mb-4">
+                  {streamerName} est en live ! Viens voir le Big Boss
+                </h2>
+                
+                {streamThumbnail && (
+                  <div className="mb-4">
+                    <img 
+                      src={streamThumbnail} 
+                      alt={`Stream de ${streamerName}`}
+                      className="w-full max-w-lg mx-auto rounded-lg shadow-lg border-2 border-purple-500"
+                    />
+                  </div>
+                )}
+                
+                <a 
+                  href={streamUrl} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="inline-block bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-300"
+                >
+                  Rejoindre le stream
+                </a>
+              </>
+            ) : (
+              <>
+                <h2 className="text-2xl font-bold text-purple-500 mb-4">
+                  Temps écoulé depuis le dernier stream de {streamerName}
+                </h2>
+                <div className="text-4xl font-mono text-white">
+                  {timeElapsed || 'Chargement...'}
                 </div>
-              </div>
+                {lastStream && (
+                  <p className="text-gray-400 mt-4">
+                    Dernier stream : {lastStream.toLocaleDateString()} à {lastStream.toLocaleTimeString()}
+                  </p>
+                )}
+                {monthlyStreamTime && (
+                  <div className="mt-6 p-4 bg-gray-700 rounded-lg">
+                    <h3 className="text-xl font-bold text-purple-400 mb-2">
+                      Temps de stream les 30 derniers jours
+                    </h3>
+                    <div className="text-2xl text-white">
+                      {monthlyStreamTime}
+                    </div>
+                  </div>
+                )}
+              </>
             )}
           </>
         )}

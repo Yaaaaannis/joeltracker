@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Options - Joel Stream Tracker</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white p-6">
+  <div class="max-w-2xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6 text-purple-400">Options de Joel Stream Tracker</h1>
+    
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
+      <h2 class="text-xl font-bold mb-4 text-purple-300">Notifications</h2>
+      
+      <div class="mb-4">
+        <label class="flex items-center space-x-3 cursor-pointer">
+          <input type="checkbox" id="enableNotifications" class="form-checkbox h-5 w-5 text-purple-500">
+          <span class="text-gray-200">Activer les notifications quand le streamer commence un live</span>
+        </label>
+      </div>
+      
+      <div class="mb-4">
+        <label class="flex items-center space-x-3 cursor-pointer">
+          <input type="checkbox" id="playSound" class="form-checkbox h-5 w-5 text-purple-500">
+          <span class="text-gray-200">Jouer un son avec la notification</span>
+        </label>
+      </div>
+      
+      <div class="mb-4">
+        <label class="block text-gray-300 mb-2">Fréquence de vérification</label>
+        <select id="checkInterval" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
+          <option value="1">Toutes les minutes</option>
+          <option value="5" selected>Toutes les 5 minutes</option>
+          <option value="10">Toutes les 10 minutes</option>
+          <option value="15">Toutes les 15 minutes</option>
+          <option value="30">Toutes les 30 minutes</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
+      <h2 class="text-xl font-bold mb-4 text-purple-300">Apparence</h2>
+      
+      <div class="mb-4">
+        <label class="block text-gray-300 mb-2">Thème</label>
+        <select id="theme" class="w-full bg-gray-700 border border-gray-600 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
+          <option value="dark" selected>Sombre</option>
+          <option value="light">Clair</option>
+          <option value="twitch">Twitch</option>
+        </select>
+      </div>
+    </div>
+    
+    <div class="flex justify-end">
+      <button id="saveOptions" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-purple-500">
+        Enregistrer
+      </button>
+    </div>
+    
+    <div id="status" class="mt-4 text-center text-green-500 hidden">Options enregistrées !</div>
+  </div>
+  
+  <script src="options.js"></script>
+</body>
+</html> 

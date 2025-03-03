@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/privacy-policy.html", "dest": "/privacy-policy.html" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ]
+} 

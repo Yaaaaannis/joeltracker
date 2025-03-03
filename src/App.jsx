@@ -240,7 +240,7 @@ function App() {
               <h3 className="text-xl font-bold text-purple-300 mt-4">6. Contact</h3>
               <p>
                 Pour toute question concernant cette politique de confidentialité ou l'utilisation de vos données, 
-                veuillez nous contacter à l'adresse suivante : batou850@gmail.com
+                veuillez nous contacter à l'adresse suivante : yannisfebvre@gmail.com
               </p>
               
               <div className="mt-6 text-sm text-gray-400">

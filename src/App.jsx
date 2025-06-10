@@ -13,7 +13,6 @@ function App() {
   const [isLive, setIsLive] = useState(false)
   const [streamUrl, setStreamUrl] = useState('')
   const [streamThumbnail, setStreamThumbnail] = useState('')
-  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false)
 
   const getAccessToken = async () => {
     try {
@@ -178,80 +177,6 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-4">
-      {/* Bouton de politique de confidentialité */}
-      <button 
-        onClick={() => setShowPrivacyPolicy(true)}
-        className="absolute top-4 right-4 text-sm text-purple-400 hover:text-purple-300 underline"
-      >
-        Politique de confidentialité
-      </button>
-      
-      {/* Afficher la politique de confidentialité si showPrivacyPolicy est true */}
-      {showPrivacyPolicy && (
-        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-gray-800 p-6 rounded-lg shadow-xl max-w-3xl max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-purple-400">Politique de Confidentialité</h2>
-              <button 
-                onClick={() => setShowPrivacyPolicy(false)}
-                className="text-gray-400 hover:text-white"
-              >
-                ✕
-              </button>
-            </div>
-            
-            <div className="text-gray-300 space-y-4">
-              <h3 className="text-xl font-bold text-purple-300 mt-4">1. Introduction</h3>
-              <p>
-                Cette politique explique comment notre extension "Joel Stream Tracker" collecte, utilise et protège vos informations lorsque vous l'utilisez pour suivre les streams de bmsjoel sur Twitch.
-              </p>
-              
-              <h3 className="text-xl font-bold text-purple-300 mt-4">2. Données collectées</h3>
-              <p>Notre extension collecte uniquement les données nécessaires à son fonctionnement :</p>
-              <ul className="list-disc pl-5 space-y-1">
-                <li>Préférences utilisateur (fréquence de vérification, activation des notifications, thème)</li>
-                <li>Informations temporaires sur le statut du stream (titre, jeu, nombre de spectateurs)</li>
-                <li>Horodatage du dernier stream et durée des streams sur les 30 derniers jours</li>
-              </ul>
-              <p>Toutes ces données sont stockées localement sur votre appareil et ne sont pas transmises à nos serveurs.</p>
-              
-              <h3 className="text-xl font-bold text-purple-300 mt-4">3. Utilisation des données</h3>
-              <p>Les données collectées sont uniquement utilisées pour :</p>
-              <ul className="list-disc pl-5 space-y-1">
-                <li>Personnaliser votre expérience utilisateur selon vos préférences</li>
-                <li>Vous notifier lorsque le streamer est en direct</li>
-                <li>Afficher les informations pertinentes sur le stream</li>
-                <li>Calculer et afficher le temps écoulé depuis le dernier stream</li>
-              </ul>
-              
-              <h3 className="text-xl font-bold text-purple-300 mt-4">4. Communication avec des services tiers</h3>
-              <p>
-                Notre extension communique avec l'API Twitch pour récupérer les informations sur le streamer. 
-                Aucune donnée personnelle vous concernant n'est partagée avec Twitch au-delà de ce qui est nécessaire pour les requêtes API standard.
-              </p>
-              
-              <h3 className="text-xl font-bold text-purple-300 mt-4">5. Vos droits</h3>
-              <p>Vous pouvez à tout moment :</p>
-              <ul className="list-disc pl-5 space-y-1">
-                <li>Modifier vos préférences dans les options de l'extension</li>
-                <li>Désinstaller l'extension pour supprimer toutes les données stockées localement</li>
-              </ul>
-              
-              <h3 className="text-xl font-bold text-purple-300 mt-4">6. Contact</h3>
-              <p>
-                Pour toute question concernant cette politique de confidentialité ou l'utilisation de vos données, 
-                veuillez nous contacter à l'adresse suivante : yannisfebvre@gmail.com
-              </p>
-              
-              <div className="mt-6 text-sm text-gray-400">
-                <p>© 2024 Joel Stream Tracker. Tous droits réservés.</p>
-                <p>Dernière mise à jour : 1 Juin 2024</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-      
       <div className="bg-gray-800 p-8 rounded-lg shadow-xl text-center">
         {error ? (
           <p className="text-red-500">{error}</p>
